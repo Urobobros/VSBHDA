@@ -8,10 +8,10 @@
 	.code
 
 RMCode1:
-%	incbin <OUTD\rmcode1.bin>
+%	incbin <OUTD/rmcode1.bin>
 RMCode1End equ $
 RMCode2:
-%	incbin <OUTD\rmcode2.bin>
+%	incbin <OUTD/rmcode2.bin>
 RMCode2End equ $
 
 copyrmcode proc c public uses esi edi pDst:ptr, nSrc:dword

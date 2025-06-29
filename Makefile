@@ -79,20 +79,31 @@ LD_EXTRA_FLAGS=op M=$(OUTD)/$(NAME).map
 INCLUDES=-I$(WATCOM)\h
 LIBS=
 
+# define recognized file extensions so the uppercase variants work
+.SUFFIXES: .ASM .C .CPP
+
 {src}.asm{$(OUTD)}.obj
 	@$(ASM) -q -D?MODEL=flat -Istartup $(A_DEBUG_FLAGS) -Fo$@ $<
 
 {src}.c{$(OUTD)}.obj
-	@$(CC) $(C_DEBUG_FLAGS) $(C_OPT_FLAGS) $(C_EXTRA_FLAGS) $(CFLAGS) -Isrc $(INCLUDES) -fo=$@ $<
+        @$(CC) $(C_DEBUG_FLAGS) $(C_OPT_FLAGS) $(C_EXTRA_FLAGS) $(CFLAGS) -Isrc $(INCLUDES) -fo=$@ $<
+{src}.C{$(OUTD)}.obj
+        @$(CC) $(C_DEBUG_FLAGS) $(C_OPT_FLAGS) $(C_EXTRA_FLAGS) $(CFLAGS) -Isrc $(INCLUDES) -fo=$@ $<
 
 {src}.cpp{$(OUTD)}.obj
-	@$(CPP) $(C_DEBUG_FLAGS) $(CPP_OPT_FLAGS) $(C_EXTRA_FLAGS) $(CPPFLAGS) -Isrc $(INCLUDES) -fo=$@ $<
+        @$(CPP) $(C_DEBUG_FLAGS) $(CPP_OPT_FLAGS) $(C_EXTRA_FLAGS) $(CPPFLAGS) -Isrc $(INCLUDES) -fo=$@ $<
+{src}.CPP{$(OUTD)}.obj
+        @$(CPP) $(C_DEBUG_FLAGS) $(CPP_OPT_FLAGS) $(C_EXTRA_FLAGS) $(CPPFLAGS) -Isrc $(INCLUDES) -fo=$@ $<
 
 {mpxplay}.c{$(OUTD)}.obj
-	@$(CC) $(C_DEBUG_FLAGS) $(C_OPT_FLAGS) $(C_EXTRA_FLAGS) $(CFLAGS) -Impxplay -Isrc $(INCLUDES) -fo=$@ $<
+        @$(CC) $(C_DEBUG_FLAGS) $(C_OPT_FLAGS) $(C_EXTRA_FLAGS) $(CFLAGS) -Impxplay -Isrc $(INCLUDES) -fo=$@ $<
+{mpxplay}.C{$(OUTD)}.obj
+        @$(CC) $(C_DEBUG_FLAGS) $(C_OPT_FLAGS) $(C_EXTRA_FLAGS) $(CFLAGS) -Impxplay -Isrc $(INCLUDES) -fo=$@ $<
 
 {startup}.asm{$(OUTD)}.obj
-	@$(ASM) -q -zcw -D?MODEL=flat $(A_DEBUG_FLAGS) -Fo$@ $<
+        @$(ASM) -q -zcw -D?MODEL=flat $(A_DEBUG_FLAGS) -Fo$@ $<
+{startup}.ASM{$(OUTD)}.obj
+        @$(ASM) -q -zcw -D?MODEL=flat $(A_DEBUG_FLAGS) -Fo$@ $<
 
 all: $(OUTD) $(OUTD)\$(NAME).exe $(OUTD16)\$(NAME)16.exe
 
@@ -121,47 +132,47 @@ $(OUTD16)\$(NAME)16.exe: .always
 $(OUTD)\$(NAME).lib: $(OBJFILES)
 	@$(LIB) -q -b -n $(OUTD)\$(NAME).lib $(OBJFILES)
 
-$(OUTD)/ac97mix.obj:   mpxplay\ac97mix.c
-$(OUTD)/au_cards.obj:  mpxplay\au_cards.c
-$(OUTD)/dmairq.obj:    mpxplay\dmairq.c
-$(OUTD)/physmem.obj:   mpxplay\physmem.c
-$(OUTD)/memory.obj:    mpxplay\memory.c
-$(OUTD)/pcibios.obj:   mpxplay\pcibios.c
-$(OUTD)/sc_e1371.obj:  mpxplay\sc_e1371.c
-$(OUTD)/sc_ich.obj:    mpxplay\sc_ich.c
-$(OUTD)/sc_inthd.obj:  mpxplay\sc_inthd.c
-$(OUTD)/sc_sbl24.obj:  mpxplay\sc_sbl24.c
-$(OUTD)/sc_sbliv.obj:  mpxplay\sc_sbliv.c
-$(OUTD)/sc_via82.obj:  mpxplay\sc_via82.c
-$(OUTD)/timer.obj:     mpxplay\timer.c
-$(OUTD)/djdpmi.obj:    src\djdpmi.asm
-$(OUTD)/dprintf.obj:   src\dprintf.asm
-$(OUTD)/fileacc.obj:   src\fileacc.asm
-$(OUTD)/hapi.obj:      src\hapi.asm
-$(OUTD)/int31.obj:     src\int31.asm
-$(OUTD)/linear.obj:    src\linear.c
-$(OUTD)/main.obj:      src\main.c
-$(OUTD)/mixer.obj:     src\mixer.asm
-$(OUTD)/pic.obj:       src\pic.c
-$(OUTD)/ptrap.obj:     src\ptrap.c
-$(OUTD)/sbisr.obj:     src\sbisr.asm
-$(OUTD)/sndisr.obj:    src\sndisr.c
-$(OUTD)/stackio.obj:   src\stackio.asm
-$(OUTD)/stackisr.obj:  src\stackisr.asm
-$(OUTD)/tsf.obj:       src\tsf.c
-$(OUTD)/uninst.obj:    src\uninst.asm
-$(OUTD)/vdma.obj:      src\vdma.c
-$(OUTD)/vioout.obj:    src\vioout.asm
-$(OUTD)/virq.obj:      src\virq.c
-$(OUTD)/vmpu.obj:      src\vmpu.c
-$(OUTD)/vsb.obj:       src\vsb.c
+$(OUTD)/ac97mix.obj:   mpxplay\AC97MIX.C
+$(OUTD)/au_cards.obj:  mpxplay\AU_CARDS.C
+$(OUTD)/dmairq.obj:    mpxplay\DMAIRQ.C
+$(OUTD)/physmem.obj:   mpxplay\PHYSMEM.C
+$(OUTD)/memory.obj:    mpxplay\MEMORY.C
+$(OUTD)/pcibios.obj:   mpxplay\PCIBIOS.C
+$(OUTD)/sc_e1371.obj:  mpxplay\SC_E1371.C
+$(OUTD)/sc_ich.obj:    mpxplay\SC_ICH.C
+$(OUTD)/sc_inthd.obj:  mpxplay\SC_INTHD.C
+$(OUTD)/sc_sbl24.obj:  mpxplay\SC_SBL24.C
+$(OUTD)/sc_sbliv.obj:  mpxplay\SC_SBLIV.C
+$(OUTD)/sc_via82.obj:  mpxplay\SC_VIA82.C
+$(OUTD)/timer.obj:     mpxplay\TIMER.C
+$(OUTD)/djdpmi.obj:    src\DJDPMI.ASM
+$(OUTD)/dprintf.obj:   src\DPRINTF.ASM
+$(OUTD)/fileacc.obj:   src\FILEACC.ASM
+$(OUTD)/hapi.obj:      src\HAPI.ASM
+$(OUTD)/int31.obj:     src\INT31.ASM
+$(OUTD)/linear.obj:    src\LINEAR.C
+$(OUTD)/main.obj:      src\MAIN.C
+$(OUTD)/mixer.obj:     src\MIXER.ASM
+$(OUTD)/pic.obj:       src\PIC.C
+$(OUTD)/ptrap.obj:     src\PTRAP.C
+$(OUTD)/sbisr.obj:     src\SBISR.ASM
+$(OUTD)/sndisr.obj:    src\SNDISR.C
+$(OUTD)/stackio.obj:   src\STACKIO.ASM
+$(OUTD)/stackisr.obj:  src\STACKISR.ASM
+$(OUTD)/tsf.obj:       src\TSF.C
+$(OUTD)/uninst.obj:    src\UNINST.ASM
+$(OUTD)/vdma.obj:      src\VDMA.C
+$(OUTD)/vioout.obj:    src\VIOOUT.ASM
+$(OUTD)/virq.obj:      src\VIRQ.C
+$(OUTD)/vmpu.obj:      src\VMPU.C
+$(OUTD)/vsb.obj:       src\VSB.C
 !ifndef NOFM
-$(OUTD)/dbopl.obj:     src\dbopl.cpp
-$(OUTD)/vopl3.obj:     src\vopl3.cpp
+$(OUTD)/dbopl.obj:     src\DBOPL.CPP
+$(OUTD)/vopl3.obj:     src\VOPL3.CPP
 	@$(CPP) $(C_DEBUG_FLAGS) -q -oxa -mf -bc -ecc -5s -fp5 -fpi87 $(C_EXTRA_FLAGS) $(CPPFLAGS) $(INCLUDES) -fo=$@ $<
 !endif
-$(OUTD)/malloc.obj:    startup\malloc.asm
-$(OUTD)/sbrk.obj:      startup\sbrk.asm
+$(OUTD)/malloc.obj:    startup\MALLOC.ASM
+$(OUTD)/sbrk.obj:      startup\SBRK.ASM
 
 
 # to avoid any issues with 16-bit relocations in PE binaries,
