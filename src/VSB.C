@@ -47,6 +47,22 @@ static const int VSB_TimeConstantMapMono[][2] = {
 };
 #endif
 
+/*
+ * DMA identification algorithm used by DSP command E2h.
+ *
+ * The constants and algorithm come from the "Sound Blaster Series"
+ * Hardware Programming Guide (Creative Technology). Each received
+ * byte is evaluated against one of four rows of signed values and the
+ * results accumulate in vsb.DMAID_A. See the manual's command E2h
+ * documentation for a full description.
+ */
+static const int16_t VSB_DMAID_Table[4][9] = {
+    { 0x01, -0x02, -0x04,  0x08, -0x10,  0x20,  0x40, -0x80, -106 },
+    { -0x01,  0x02, -0x04,  0x08,  0x10, -0x20,  0x40, -0x80,  165 },
+    { -0x01,  0x02,  0x04, -0x08,  0x10, -0x20, -0x40,  0x80, -151 },
+    { 0x01, -0x02,  0x04, -0x08, -0x10,  0x20, -0x40,  0x80,   90 }
+};
+
 // number of bytes in input for commands (sb/sbpro)
 static const uint8_t DSP_cmd_len_sb[256] = {
   0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,  // 0x00
@@ -132,8 +148,8 @@ struct VSB_Status {
     uint8_t TestReg;
     uint8_t WS;
     uint8_t RS;
-    uint8_t DMAID_A;
-    uint8_t DMAID_X;
+    int16_t DMAID_A;
+    uint32_t DMAID_Count;
     uint8_t DataBytes; /* # of bytes to read from DataBuffer */
     uint8_t DataBuffer[48];
     uint8_t bSpeaker;
@@ -331,7 +347,7 @@ static void DSP_Reset( uint8_t value )
         vsb.Silent = false;
         vsb.Bits = 8;
         vsb.DMAID_A = 0xAA;
-        vsb.DMAID_X = 0x96;
+        vsb.DMAID_Count = 0;
         vsb.DirectIdx = 0;
         vsb.WS = 0x80;
         vsb.RS = 0x7F;
@@ -602,10 +618,19 @@ static void DSP_DoCommand( void )
         dbgprintf(("DSP_DoCommand: cmd %X, databytes=%u\n", vsb.dsp_cmd, vsb.DataBytes ));
         break;
     case SB_DSP_DMA_ID: /* E2 */
-        vsb.DMAID_A += vsb.dsp_in_data[0] ^ vsb.DMAID_X;
-        vsb.DMAID_X = (vsb.DMAID_X >> 2u) | (vsb.DMAID_X << 6u);
+        /* Implementation based on the official DMA transfer identification */
+        /* algorithm (DSP command E2h). */
+        {
+            int i;
+            for( i = 0; i < 8; ++i )
+                if( vsb.dsp_in_data[0] & (1 << i) )
+                    vsb.DMAID_A += VSB_DMAID_Table[vsb.DMAID_Count][i];
+            vsb.DMAID_A += VSB_DMAID_Table[vsb.DMAID_Count][8];
+            vsb.DMAID_Count = (vsb.DMAID_Count + 1) & 3;
+        }
         dbgprintf(("DSP_DoCommand: cmd %X\n", vsb.dsp_cmd ));
-        VDMA_WriteData( vsb.Dma8, vsb.DMAID_A ); /* write to low dma channel */
+        VDMA_WriteData( vsb.Dma8, (vsb.DMAID_A >> 8) & 0xFF );
+        VDMA_WriteData( vsb.Dma8, vsb.DMAID_A & 0xFF );
         break;
     case SB_DSP_COPYRIGHT: /* E3 */
         strcpy( vsb.DataBuffer, SB_Copyright );

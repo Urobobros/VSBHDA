@@ -85,6 +85,18 @@ on your system which can be installed with
 sudo apt-get install libfl2
 ```
 
+For convenience this repository ships a helper script that installs the
+prebuilt toolchain used by the CI workflows. Run it with superuser
+rights to place the cross compiler in `/opt/djgpp`:
+
+```
+sudo ./scripts/install-djgpp.sh /opt/djgpp
+source /opt/djgpp/setenv
+```
+
+You can replace the target directory with any other path if you do not
+want to use `/opt/djgpp`.
+
 Invoke
 
 ```
