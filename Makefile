@@ -56,6 +56,7 @@ A_DEBUG_FLAGS=
 OBJFILES = &
 	$(OUTD)/main.obj		$(OUTD)/sndisr.obj		$(OUTD)/ptrap.obj		$(OUTD)/linear.obj		$(OUTD)/pic.obj &
 	$(OUTD)/vsb.obj			$(OUTD)/vdma.obj		$(OUTD)/virq.obj		$(OUTD)/vmpu.obj		$(OUTD)/tsf.obj &
+        $(OUTD)/ad1848.obj             $(OUTD)/wss.obj &
 !ifndef NOFM
 	$(OUTD)/dbopl.obj		$(OUTD)/vopl3.obj &
 !endif
@@ -166,6 +167,8 @@ $(OUTD)/vioout.obj:    src\VIOOUT.ASM
 $(OUTD)/virq.obj:      src\VIRQ.C
 $(OUTD)/vmpu.obj:      src\VMPU.C
 $(OUTD)/vsb.obj:       src\VSB.C
+$(OUTD)/ad1848.obj:    src\AD1848.C
+$(OUTD)/wss.obj:       src\WSS.C
 !ifndef NOFM
 $(OUTD)/dbopl.obj:     src\DBOPL.CPP
 $(OUTD)/vopl3.obj:     src\VOPL3.CPP
