@@ -25,6 +25,7 @@
 #include "VSB.H"
 #include "SNDISR.H"
 #include "VMPU.H"
+#include "WSS.H"
 #include "VERSION.H"
 
 #include "AU.H"
@@ -466,6 +467,7 @@ int main(int argc, char* argv[])
 #endif
 
     VPIC_Init( AU_getirq( gm.hAU ) );
+    WSS_Reset();
 
 #ifdef NOFM
     gvars.opl3 = 0;
@@ -517,6 +519,9 @@ int main(int argc, char* argv[])
     if ( gvars.slowdown  )
         printf("Slowdown factor=%u\n", gvars.slowdown );
 #endif
+    printf("Windows Sound System at address 530, IRQ %d, DMA %d: %s\n",
+           WSS_GetIRQ(), WSS_GetDMA(),
+           WSS_IRQFree() ? "enabled" : "disabled");
     /* temp alloc a 64 kB chunk of memory. This will ensure that mallocs done while sound is playing won't
      * need another DPMI memory allocation. A dpmi memory allocation while another client is active will
      * result in problems, since that memory is released when that client exits.

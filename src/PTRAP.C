@@ -25,6 +25,7 @@
 #include "VDMA.H"
 #include "VIRQ.H"
 #include "VSB.H"
+#include "WSS.H"
 #include "HAPI.H"
 #if VMPU
 #include "VMPU.H"
@@ -57,7 +58,7 @@ extern void * copyrmcode( void *, int );
 void * dosheap;
 #endif
 
-static uint32_t traphdl[8+1] = {0}; /* hdpmi32i trap handles */
+static uint32_t traphdl[9+1] = {0}; /* hdpmi32i trap handles */
 
 
 struct HDPMIAPI_ENTRY HDPMIAPI_Entry; /* vendor API entry */
@@ -76,9 +77,11 @@ static const uint8_t ChannelPageMap[] = { 0x87, 0x83, 0x81, 0x82, -1, 0x8b, 0x89
 #define HDMA_PDT  5
 #define SB_PDT    6
 #define MPU_PDT   7
+#define WSS_PDT   8
 #else
 #define SB_PDT    5
 #define MPU_PDT   6
+#define WSS_PDT   7
 #endif
 
 static uint16_t PortTable[] = {
@@ -102,8 +105,11 @@ static uint16_t PortTable[] = {
 	0x22A, 0x22C,
 	0x22E, 0x22F | 0x8000,
 #if VMPU
-	0x330, 0x331 | 0x8000,
+        0x330, 0x331 | 0x8000,
 #endif
+        0x530, 0x531, 0x532, 0x533,
+        0x534, 0x535, 0x536, 0x537,
+        0x538 | 0x8000,
     0xffff
 };
 
@@ -129,14 +135,17 @@ static PORT_TRAP_HANDLER PortHandler[] = {
 	VSB_DSP_Read, VSB_DSP_Write,                /* 0x22A, 0x22C */
 	VSB_DSP_ReadStatus, VSB_DSP_ReadINT16BitACK, /* 0x22e, 0x22f */
 #if VMPU
-	VMPU_MPU, VMPU_MPU,
+        VMPU_MPU, VMPU_MPU,
 #endif
+        WSS_Port, WSS_Port, WSS_Port, WSS_Port,
+        WSS_Port, WSS_Port, WSS_Port, WSS_Port,
+        WSS_Port,
 };
 
 static uint16_t PortState[countof(PortHandler)];
 
 /* hdpmi is restricted to 8 port ranges */
-static int portranges[8+1];
+static int portranges[9+1];
 
 /* real-mode port trap handler;
  * called by SwitchStackIOrmcb().

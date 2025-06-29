@@ -50,7 +50,8 @@ OBJFILES=\
         $(OUTD)/DMAIRQ.o        $(OUTD)/PCIBIOS.o       $(OUTD)/MEMORY.o       $(OUTD)/PHYSMEM.o        $(OUTD)/TIMER.o\
         $(OUTD)/SC_E1371.o      $(OUTD)/SC_ICH.o        $(OUTD)/SC_INTHD.o     $(OUTD)/SC_VIA82.o       $(OUTD)/SC_SBLIV.o      $(OUTD)/SC_SBL24.o\
         $(OUTD)/STACKIO.o       $(OUTD)/STACKISR.o      $(OUTD)/SBISR.o        $(OUTD)/INT31.o          $(OUTD)/RMWRAP.o        $(OUTD)/MIXER.o\
-        $(OUTD)/HAPI.o          $(OUTD)/DPRINTF.o       $(OUTD)/VIOOUT.o       $(OUTD)/DJDPMI.o         $(OUTD)/UNINST.o        $(OUTD)/FILEACC.o
+        $(OUTD)/HAPI.o          $(OUTD)/DPRINTF.o       $(OUTD)/VIOOUT.o       $(OUTD)/DJDPMI.o         $(OUTD)/UNINST.o        $(OUTD)/FILEACC.o\
+        $(OUTD)/AD1848.o        $(OUTD)/WSS.o
 
 INCLUDE_DIRS=src MPXPLAY
 SRC_DIRS=src MPXPLAY
@@ -143,11 +144,11 @@ $(OUTD)/DBOPL.o:    src/DBOPL.CPP   src/DBOPL.H
 	$(COMPILE.cpp.o)
 $(OUTD)/LINEAR.o:   src/LINEAR.C    src/LINEAR.H src/PLATFORM.H
 	$(COMPILE.c.o)
-$(OUTD)/MAIN.o:     src/MAIN.C      src/LINEAR.H src/PLATFORM.H src/PTRAP.H src/VOPL3.H src/PIC.H src/CONFIG.H src/VSB.H src/VDMA.H src/VIRQ.H src/AU.H src/VERSION.H
+$(OUTD)/MAIN.o:     src/MAIN.C      src/LINEAR.H src/PLATFORM.H src/PTRAP.H src/VOPL3.H src/PIC.H src/CONFIG.H src/VSB.H src/VDMA.H src/VIRQ.H src/AU.H src/VERSION.H src/WSS.H
 	$(COMPILE.c.o)
 $(OUTD)/PIC.o:      src/PIC.C       src/PIC.H src/PLATFORM.H src/PTRAP.H
 	$(COMPILE.c.o)
-$(OUTD)/PTRAP.o:    src/PTRAP.C     src/LINEAR.H src/PLATFORM.H src/PTRAP.H src/CONFIG.H
+$(OUTD)/PTRAP.o:    src/PTRAP.C     src/LINEAR.H src/PLATFORM.H src/PTRAP.H src/CONFIG.H src/WSS.H
 	$(COMPILE.c.o)
 $(OUTD)/SNDISR.o:   src/SNDISR.C    src/LINEAR.H src/PLATFORM.H src/VOPL3.H src/PIC.H src/CONFIG.H src/VSB.H src/VDMA.H src/VIRQ.H src/CTADPCM.H src/AU.H
 	$(COMPILE.c.o)
