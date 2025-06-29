@@ -12,5 +12,6 @@ void WSS_WritePort(uint16_t port, uint8_t value);
 int WSS_GetDMA(void);
 int WSS_GetIRQ(void);
 bool WSS_IRQFree(void);
+uint32_t WSS_Port(uint32_t port, uint32_t val, uint32_t out);
 
 #endif // WSS_EMU_H

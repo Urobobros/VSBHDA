@@ -60,5 +60,14 @@ int WSS_GetIRQ(void)
 bool WSS_IRQFree(void)
 {
     uint16_t mask = PIC_GetIRQMask();
-    return PIC_IS_IRQ_MASKED(mask, WSS_IRQ);
+    return !(mask & (1 << WSS_IRQ));
+}
+
+uint32_t WSS_Port(uint32_t port, uint32_t val, uint32_t out)
+{
+    if(out) {
+        WSS_WritePort((uint16_t)port, (uint8_t)val);
+        return val;
+    }
+    return (val & ~0xFF) | WSS_ReadPort((uint16_t)port);
 }
