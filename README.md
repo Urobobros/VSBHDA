@@ -105,3 +105,5 @@ or simply run
 ```
 
 to compile VSBHDA using the cross toolchain.
+
+The script creates a `djgpp` directory with the object files and produces `djgpp/vsbhdad.exe` as the final DOS binary. It downloads the toolchain and JWasm only once and reuses them on subsequent runs.
